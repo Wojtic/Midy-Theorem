@@ -12,9 +12,10 @@ class real():
         self.b = b
         self.c = c
 
-        if (m == 0) and ((k != 1) or (c != 0)):
-            raise Exception("When m=0 k must =1 and c must =0") 
-            return
+#        if (m == 0) and ((k != 1) or (c != 0)):
+#            print(a, b, c, m, k)
+#            raise Exception("When m=0 k must =1 and c must =0") 
+#            return
 
         self.reduce()
 
@@ -50,6 +51,8 @@ class real():
         b = int(self.b * other.b)
         c = int(self.a * other.b * self.c - other.a * self.b * other.c)
         k = int(self.a * other.b * self.k - other.a * self.b * other.k)
+        if (c == 0) and (k == 0):
+            return real(0, b, self.m, c, 1)
         return real(1, b, self.m, c, k)
 
 
@@ -64,7 +67,7 @@ class real():
             return
 
         if self.m == 0:
-            return real(0, int(self.a*other.a), int(self.b*other.b))
+            return real(int(self.a*other.a), int(self.b*other.b))
 
         a = int(self.a * other.a)
         b = int(self.b * other.b)
@@ -74,6 +77,9 @@ class real():
         return real(a, b, self.m, c, k)
 
     def __eq__(self, other):
+        if (self.c == other.c == 0):
+            if (self.a*self.k == other.a*other.k):
+                return self.b == other.b
         return (self.a == other.a) and (self.b == other.b) and (self.c == other.c) and (self.m == other.m) and (self.k == other.k)
 
     def approx(self):
@@ -85,6 +91,14 @@ class real():
     __rmul__ = __mul__
     __repr__ = __str__
         
+def expansionToReal(beta, expansion):
+    # Z
+    num = real(0) * beta
+    mult = real(1)
+    for i in range(len(expansion)):
+        num = real(int(expansion[-i - 1])) * mult + num
+        mult = mult * beta
+    return num
 
 def quasigreedy(beta):
     return greedyT(beta, 0.999999999)
@@ -98,15 +112,6 @@ def greedy(beta, x):
         k -= 1
         x_i.append(floor(r/beta**k))
     return x_i
-"""
-def T(beta, n, x):
-    # [0, 1] -> [0, 1)
-    if n == 0:
-        return x
-    if n == 1:
-        return beta*x - floor(beta*x)
-    return beta*T(beta, n-1, x) - floor(beta*T(beta, n-1, x))
-"""
 
 def T(beta, n, x):
     # [0, 1] -> [0, 1)
@@ -118,51 +123,37 @@ def T(beta, n, x):
     mult = beta*T(beta, n-1, x)
     return mult - mult.floor()
 
-"""
 def greedyT(beta, x):
     # [0, 1)
     Ti = []
     xi = []
     i = 0
-    while i < 20:
-        Ti.append(T(beta, i, x))
-        i += 1
-        xi.append(floor(beta*Ti[-1]))
-        if Ti[-1] in Ti[:-1]:
-            break
-    #print(Ti)
-    return xi
-"""
-
-def greedyT(beta, x):
-    # [0, 1)
-    Ti = []
-    xi = []
-    i = 0
-    while i < 20:
+    while True:
+        if i > 100:
+            return xi
         Ti.append(T(beta, i, x))
         i += 1
         mult = beta*Ti[-1]
-        xi.append(mult.floor())
+        xi.append(int(mult.floor().approx()))
         for j in range(len(Ti) - 1):
             if Ti[j] == Ti[-1]:
-                return xi
-    #print(Ti)
-    return xi
+                return xi[0:j] + ["("] + xi[j:-1] + [")"]
 
-print(greedyT(real(2), real(1,2)))
+GR = real(1, 1, 1, 1, 0)
+#print(greedyT(real(10), real(3,7)))
+#print(greedyT(real(1, 1, 1, 1, 0), real(1,41)))
 #print(greedyT(0.5*(1+sqrt(5)), 3/7))
 #print(quasigreedy(10))
 #print(quasigreedy(0.5*(1+sqrt(5))))
 #a = real(3, 2, 1, 2, 4)
 #b = real(3, 5, 0)
-"""
-a = real(2, 5, 1, 2, 1)
-b = real(4, 3, 1, 5, 2)
-multiple = a + b
-print(a)
-print(b)
-print(multiple)
-print(multiple.approx())
-print(multiple.floor())
-"""
+#a = real(2, 5, 1, 2, 1)
+#b = real(4, 3, 1, 5, 2)
+#multiple = a + b
+#print(a)
+#print(b)
+#print(multiple)
+#print(multiple.approx())
+#print(multiple.floor())
+print(expansionToReal(GR, [1, 0, 0, 1]))
+#print(expansionToReal(GR, "101001"))
