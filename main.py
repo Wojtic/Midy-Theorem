@@ -139,9 +139,31 @@ def greedyT(beta, x):
             if Ti[j] == Ti[-1]:
                 return xi[0:j] + ["("] + xi[j:-1] + [")"]
 
+def checkMidy(expansion, beta):
+    if (expansion[0] != "(") or (expansion[-1] != ")"):
+        return False
+    n = len(expansion) - 2
+    if n % 2 != 0:
+        return False
+
+    added = expansionToReal(beta, expansion[1:int(n/2) + 1]) + expansionToReal(beta, expansion[int(n/2) + 1:-1])
+    print(expansion[1:int(n/2) + 1])
+    print(expansion[int(n/2) + 1:-1])
+    #return "".join(map(str,expansion[1:int(n/2) + 1])) + "\n" + "".join(map(str,expansion[int(n/2) + 1:-1]))
+
 GR = real(1, 1, 1, 1, 0)
+print(greedyT(GR, real(3,7)))
+print(GR, checkMidy(greedyT(GR, real(3,7)), GR))
 #print(greedyT(real(10), real(3,7)))
-#print(greedyT(real(1, 1, 1, 1, 0), real(1,41)))
+#print(greedyT(real(1, 1, 2, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 3, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 4, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 5, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 6, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 7, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 8, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 9, 1, 0), real(99999999999999,100000000000000)))
+#print(greedyT(real(1, 1, 10, 1, 0), real(99999999999999,100000000000000)))
 #print(greedyT(0.5*(1+sqrt(5)), 3/7))
 #print(quasigreedy(10))
 #print(quasigreedy(0.5*(1+sqrt(5))))
@@ -155,5 +177,5 @@ GR = real(1, 1, 1, 1, 0)
 #print(multiple)
 #print(multiple.approx())
 #print(multiple.floor())
-print(expansionToReal(GR, [1, 0, 0, 1]))
+#print(expansionToReal(GR, [1, 0, 0, 1]))
 #print(expansionToReal(GR, "101001"))
