@@ -39,15 +39,16 @@ class real():
 
     def __add__(self, other):
         if (self.m != other.m) and not ((self.m == 0) or (other.m == 0)):
-            raise Exceaption("The two added numbers have different nonzero irrational parts") 
+            raise Exception("The two added numbers have different nonzero irrational parts") 
         b = int(self.b * other.b)
         c = int(self.a * other.b * self.c + other.a * self.b * other.c)
         k = int(self.a * other.b * self.k + other.a * self.b * other.k)
         return real(1, b, self.m, c, k)
 
     def __sub__(self, other):
+        # Doesn't work
         if (self.m != other.m) and not ((self.m == 0) or (other.m == 0)):
-            raise Exceaption("The two subtracted numbers have different nonzero irrational parts") 
+            raise Exception("The two subtracted numbers have different nonzero irrational parts") 
         b = int(self.b * other.b)
         c = int(self.a * other.b * self.c - other.a * self.b * other.c)
         k = int(self.a * other.b * self.k - other.a * self.b * other.k)
@@ -63,18 +64,23 @@ class real():
                 k = self.k if self.m != 0 else other.k
                 c = self.c if self.m != 0 else other.c
                 return real(int(self.a*other.a), int(self.b*other.b), m, c, k)
-            raise Exceaption("The two multiplied numbers have different nonzero irrational parts") 
+            raise Exception("The two multiplied numbers have different nonzero irrational parts") 
             return
 
         if self.m == 0:
             return real(int(self.a*other.a), int(self.b*other.b))
-
         a = int(self.a * other.a)
         b = int(self.b * other.b)
         c = int(self.c * other.c * self.m + self.c * other.k + other.c * self.k)
         k = int(self.c * other.c + self.k * other.k)
 
         return real(a, b, self.m, c, k)
+
+    def __pow__(self, n):
+        result = real(1, 1, self.m, 0, 1)
+        for i in range(n):
+            result = result * self
+        return result
 
     def __eq__(self, other):
         if (self.c == other.c == 0):
@@ -104,13 +110,18 @@ def quasigreedy(beta):
     return greedyT(beta, 0.999999999)
 
 def greedy(beta, x):
-    k = floor(math.log(x, beta))
-    x_i = [floor(x/beta**k)]
+    # Doesn't work!!
+    k = floor(math.log(x.approx(), beta.approx()))
+    exponent = beta**k
+    x_i = [real(floor(x.approx()/exponent.approx()))]
     r = x
     while k > 0:
+        print("k: ", k, "r: ", r, "x: ", x_i[-1], "mult: ",real(1) - (beta**k) * x_i[-1])
         r = r - (beta**k) * x_i[-1]
+        print("k: ", k, "r: ", r, "x: ", x_i[-1])
         k -= 1
-        x_i.append(floor(r/beta**k))
+        exponent = beta**k
+        x_i.append(real(floor(r.approx()/exponent.approx())))
     return x_i
 
 def T(beta, n, x):
@@ -129,7 +140,7 @@ def greedyT(beta, x):
     xi = []
     i = 0
     while True:
-        if i > 100:
+        if i > 1000:
             return xi
         Ti.append(T(beta, i, x))
         i += 1
@@ -147,35 +158,35 @@ def checkMidy(expansion, beta):
         return False
 
     added = expansionToReal(beta, expansion[1:int(n/2) + 1]) + expansionToReal(beta, expansion[int(n/2) + 1:-1])
-    print(expansion[1:int(n/2) + 1])
-    print(expansion[int(n/2) + 1:-1])
-    #return "".join(map(str,expansion[1:int(n/2) + 1])) + "\n" + "".join(map(str,expansion[int(n/2) + 1:-1]))
+    expanded = [floor(i.approx()) for i in greedy(beta, added)]
+    print("exp: ", expanded)
+    if len(expanded) != n / 2:
+        return False
+    for i in range(len(expanded)):
+        # Check quasigreedy !!TODO!!
+        if (i % 2 == 0) and (expanded[i] != beta.m):
+            return False
+        if (i % 2 != 0) and (expanded[i] != 0):
+            return False
+    return True
+
+def checkMidyProperty(beta, n):
+    for a in range(1, n):
+        expansion = greedyT(beta, real(a, n))
+        #print(expansion)
+        if checkMidy(expansion, beta):
+            return [True, expansion]
+    return False
 
 GR = real(1, 1, 1, 1, 0)
-print(greedyT(GR, real(3,7)))
-print(GR, checkMidy(greedyT(GR, real(3,7)), GR))
-#print(greedyT(real(10), real(3,7)))
-#print(greedyT(real(1, 1, 2, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 3, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 4, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 5, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 6, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 7, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 8, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 9, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(real(1, 1, 10, 1, 0), real(99999999999999,100000000000000)))
-#print(greedyT(0.5*(1+sqrt(5)), 3/7))
-#print(quasigreedy(10))
-#print(quasigreedy(0.5*(1+sqrt(5))))
-#a = real(3, 2, 1, 2, 4)
-#b = real(3, 5, 0)
-#a = real(2, 5, 1, 2, 1)
-#b = real(4, 3, 1, 5, 2)
-#multiple = a + b
-#print(a)
-#print(b)
-#print(multiple)
-#print(multiple.approx())
-#print(multiple.floor())
-#print(expansionToReal(GR, [1, 0, 0, 1]))
-#print(expansionToReal(GR, "101001"))
+#print(greedyT(GR, real(3,7)))
+#checkMidy(greedyT(GR, real(3,7)), GR)
+#print(checkMidy(greedyT(GR, real(3,7)), GR))
+#print(checkMidy(greedyT(real(10), real(1,7)), real(10)))
+#for i in range(1, 100):
+#    print(i, checkMidyProperty(GR, i))
+
+added = expansionToReal(GR, ["1"]) + expansionToReal(GR, ["1"])
+#print(added)
+expansion = greedy(GR, added)
+print(expansion)
