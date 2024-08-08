@@ -40,15 +40,22 @@ class real():
     def __add__(self, other):
         if (self.m != other.m) and not ((self.m == 0) or (other.m == 0)):
             raise Exception("The two added numbers have different nonzero irrational parts") 
+        if (self.m == 0) and (other.m != 0):
+            self.m = other.m
+        if (other.m == 0) and (self.m != 0):
+            other.m = self.m
         b = int(self.b * other.b)
         c = int(self.a * other.b * self.c + other.a * self.b * other.c)
         k = int(self.a * other.b * self.k + other.a * self.b * other.k)
         return real(1, b, self.m, c, k)
 
     def __sub__(self, other):
-        # Doesn't work
         if (self.m != other.m) and not ((self.m == 0) or (other.m == 0)):
             raise Exception("The two subtracted numbers have different nonzero irrational parts") 
+        if (self.m == 0) and (other.m != 0):
+            self.m = other.m
+        if (other.m == 0) and (self.m != 0):
+            other.m = self.m
         b = int(self.b * other.b)
         c = int(self.a * other.b * self.c - other.a * self.b * other.c)
         k = int(self.a * other.b * self.k - other.a * self.b * other.k)
@@ -93,6 +100,9 @@ class real():
 
     def floor(self):
         return real(floor(self.approx()))
+
+    def int(self):
+        return floor(self.approx())
         
     __rmul__ = __mul__
     __repr__ = __str__
@@ -122,6 +132,10 @@ def greedy(beta, x):
         k -= 1
         exponent = beta**k
         x_i.append(real(floor(r.approx()/exponent.approx())))
+    if r != real(0):
+        x_i = list(map(lambda num: num.int(), x_i))
+        x_i.append(".")
+        x_i += greedyT(beta, r)
     return x_i
 
 def T(beta, n, x):
@@ -158,8 +172,7 @@ def checkMidy(expansion, beta):
         return False
 
     added = expansionToReal(beta, expansion[1:int(n/2) + 1]) + expansionToReal(beta, expansion[int(n/2) + 1:-1])
-    expanded = [floor(i.approx()) for i in greedy(beta, added)]
-    print("exp: ", expanded)
+    expanded = greedy(beta, added)
     if len(expanded) != n / 2:
         return False
     for i in range(len(expanded)):
@@ -183,10 +196,7 @@ GR = real(1, 1, 1, 1, 0)
 #checkMidy(greedyT(GR, real(3,7)), GR)
 #print(checkMidy(greedyT(GR, real(3,7)), GR))
 #print(checkMidy(greedyT(real(10), real(1,7)), real(10)))
-#for i in range(1, 100):
-#    print(i, checkMidyProperty(GR, i))
+for i in range(1, 100):
+    print(i, checkMidyProperty(GR, i))
 
-added = expansionToReal(GR, ["1"]) + expansionToReal(GR, ["1"])
-#print(added)
-expansion = greedy(GR, added)
-print(expansion)
+
