@@ -116,24 +116,21 @@ def expansionToReal(beta, expansion):
         mult = mult * beta
     return num
 
-def quasigreedy(beta):
-    return greedyT(beta, 0.999999999)
+#def quasigreedy(beta):
+#    return greedyT(beta, 0.999999999)
 
 def greedy(beta, x):
-    # Doesn't work!!
     k = floor(math.log(x.approx(), beta.approx()))
     exponent = beta**k
     x_i = [real(floor(x.approx()/exponent.approx()))]
     r = x
     while k > 0:
-        print("k: ", k, "r: ", r, "x: ", x_i[-1], "mult: ",real(1) - (beta**k) * x_i[-1])
         r = r - (beta**k) * x_i[-1]
-        print("k: ", k, "r: ", r, "x: ", x_i[-1])
         k -= 1
         exponent = beta**k
         x_i.append(real(floor(r.approx()/exponent.approx())))
+    x_i = list(map(lambda num: num.int(), x_i))
     if r != real(0):
-        x_i = list(map(lambda num: num.int(), x_i))
         x_i.append(".")
         x_i += greedyT(beta, r)
     return x_i
@@ -185,18 +182,17 @@ def checkMidy(expansion, beta):
 
 def checkMidyProperty(beta, n):
     for a in range(1, n):
+        if gcd(n, a) > 1:
+            continue
         expansion = greedyT(beta, real(a, n))
-        #print(expansion)
         if checkMidy(expansion, beta):
-            return [True, expansion]
+            return [True, a, expansion]
     return False
 
 GR = real(1, 1, 1, 1, 0)
-#print(greedyT(GR, real(3,7)))
-#checkMidy(greedyT(GR, real(3,7)), GR)
-#print(checkMidy(greedyT(GR, real(3,7)), GR))
-#print(checkMidy(greedyT(real(10), real(1,7)), real(10)))
-for i in range(1, 100):
-    print(i, checkMidyProperty(GR, i))
+
+if __name__ == "__main__":
+    for i in range(1, 100):
+        print(i, checkMidyProperty(GR, i))
 
 
