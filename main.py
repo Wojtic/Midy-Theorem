@@ -1,4 +1,5 @@
 import math
+from functools import lru_cache
 from math import floor, sqrt, gcd
 
 class real():
@@ -90,10 +91,15 @@ class real():
         return result
 
     def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
         if (self.c == other.c == 0):
             if (self.a*self.k == other.a*other.k):
                 return self.b == other.b
         return (self.a == other.a) and (self.b == other.b) and (self.c == other.c) and (self.m == other.m) and (self.k == other.k)
+
+    def __hash__(self):
+        return hash((self.a, self.b, self.c, self.m, self.k))
 
     def approx(self):
         return self.a/self.b * (self.c * ( self.m + sqrt(self.m**2 + 4) ) / 2 + self.k)
@@ -119,6 +125,7 @@ def expansionToReal(beta, expansion):
 #def quasigreedy(beta):
 #    return greedyT(beta, 0.999999999)
 
+@lru_cache(maxsize = None)
 def greedy(beta, x):
     k = floor(math.log(x.approx(), beta.approx()))
     exponent = beta**k
@@ -135,6 +142,8 @@ def greedy(beta, x):
         x_i += greedyT(beta, r)
     return x_i
 
+
+@lru_cache(maxsize = None)
 def T(beta, n, x):
     # [0, 1] -> [0, 1)
     if n == 0:
@@ -145,6 +154,7 @@ def T(beta, n, x):
     mult = beta*T(beta, n-1, x)
     return mult - mult.floor()
 
+@lru_cache(maxsize = None)
 def greedyT(beta, x):
     # [0, 1)
     Ti = []
