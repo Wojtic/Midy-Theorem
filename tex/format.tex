@@ -1,0 +1,440 @@
+\documentclass{article}
+
+\usepackage{amsthm}
+\usepackage[czech]{babel} % základní podpora pro češtinu, mj. správné dělení slov
+\newtheorem{theorem}{Tvrzení}
+\usepackage[utf8]{inputenc} % vstupní kódování je UTF-8
+\usepackage[T1]{fontenc} % výstupní kódování
+
+\usepackage{icomma}
+
+\usepackage{graphicx} % Required for inserting images
+\usepackage[a4paper, left=35mm, top=25mm, right=15mm, bottom=22.5mm]{geometry}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{biblatex}
+
+\addbibresource{sources.bib}
+
+\newtheorem{veta}{Věta}[section]
+\newtheorem{lemma}[veta]{Lemma}
+\theoremstyle{definition}
+\newtheorem{example}{Příklad}
+\theoremstyle{definition}
+\newtheorem{definice}{Definice}[section]
+\newtheorem{corollary}{Důsledek}[theorem]
+\theoremstyle{remark}
+\newtheorem*{pozn}{Poznámka}
+%\renewcommand{\proofname}{Důkaz}
+%\renewcommand{\qedsymbol}{}
+\numberwithin{equation}{section}
+
+\begin{document}
+
+\begin{titlepage}
+	\begin{center}
+
+		\vspace{15mm}
+
+		{\Large{\textbf{STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST}}}\\
+
+		\vspace{3mm}
+
+		{\large{\textbf{Obor č. 1:} Matematika a statistika}}\\
+
+		\vspace{80mm}
+
+		{\LARGE{\textbf{Midyho věta v obecných reálných číselných soustavách a dělitelnost prvků Lucas sequences}}}\\
+
+		\vspace{10mm}
+
+		{\LARGE{\textbf{Midy's theorem in real numeral systems and divisibility properties of Lucas sequences }}}\\
+
+		\vspace{80mm}
+
+		\large{
+			\begin{tabular}{l l}
+				\textbf{Autor:}      & Vojtěch Černý          \\
+				\textbf{Škola:}      & Gymnázium Jana Keplera \\
+				\textbf{Kraj:}       & Hlavní město Praha     \\
+				\textbf{Konzultant:} & spousta titulů
+			\end{tabular}
+		}\\
+
+		\vspace{5mm}
+
+		{\large{ Praha 2024\\}}
+	\end{center}
+\end{titlepage}
+
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\listoftables
+\listoffigures
+\pagenumbering{arabic}
+
+\begin{abstract}
+	Zlomky s prvočíselným jmenovatelem s periodou sudé délky vykazují v desítkové soustavě chování popsané Midyho větou, tedy součet obou půlek jejich period je roven $10^n - 1$. Na základě článku Z. Masákové a E. Pelantové ukážeme dostatečnou podmínku pro to, aby zlomek vykazoval \textit{Midy property} v obecné reálné soustavě $\beta > 1$ a na základě vlastností dělitelností prvků \textit{Lucas sequences}\footnote{\href{https://en.wikipedia.org/wiki/Lucas_sequence}{Lucas sequence}} popíšeme jmenovatele daných zlomků.
+\end{abstract}
+
+\newpage
+
+\section{Úvod}
+
+V decimální soustavě pozorujeme u zlomků s prvočíselnými jmenovateli vlastnost popsanou Midyho větou. Například vezmeme-li rozvoj $\frac{1}{7} = 0,(142857)^\omega$ a rozdělíme periodu na poloviny, které následně sečteme, získáme $142 + 857 = 999$, tedy číslo tvořené pouze ciframi 9, což pozorujeme vždy, když vzniká perioda sudé délky. Lze najít podobné vlastnosti i pro jiná dělení periody.
+
+Roku 1957 představil A. Rényi \cite{Renyi} poziční soustavy, využívající jako bázi libovolné reálné $\beta > 1$. Z. Masáková a E. Pelantová \cite{Midy} popsaly obměnu\footnote{Najít lepší slovo} Midyho věty pro tyto soustavy a rozebraly zlomky s touto vlastností v soustavě o základu zlatý řez. V této práci popíšeme takové zlomky i v dalších soustavách.
+
+Konkrétně mějme $\gamma(\beta)$ supremum reálných čísel $\gamma$ takové, že každé $x \in [0, \gamma) \cap \mathbb{Q}$ má ryze periodický rozvoj v soustavě s bází $\beta$. Poté bylo ukázáno, že je-li $\gamma(\beta) > 0$, pak je $\beta$ \textit{Pisot unit}, tedy všechny další kořeny minimálního polynomu jsou velikostí menší než 1 a součin všech kořenů je $\pm 1$. Pro kvadratické \textit{Pisot units} je $\gamma(\beta) > 0$ (konkrétně $\gamma(\beta) = 1$) pouze pro kořeny $\beta > 1$ polynomu $$X^2 - mX - 1, \quad m \geq 1$$
+
+Budu tedy rozebírat pouze taková $\beta$. Tyto polynomy dávají vzniknout rekurentním posloupnostem ve tvaru $$S_{N + 2} = m\cdot S_{N + 1} + S_N,$$ což jsou konkrétní případy tzv. \textit{Lucas sequences}. Pro $m = 1$ dostáváme jako kořen polynomu zlatý řez a vzniká Fibonacciho posloupnost.
+
+\subsection{Poziční číselné soustavy}
+
+Číselná soustava je určitý systém zapisování čísel pomocí množiny znaků. Rozlišujeme nepoziční a poziční soustavy. Mezi ty nepoziční spadají například římské číslice. Poziční číselné soustavy, jimiž se budu dále zabývat, zapisují čísla jako násobky mocnin báze dané soustavy. Bývá, z praktických důvodů, zvykem využívat za bázi přirozená čísla. Na příkladech, tedy na lidmi využívané 10 (decimální soustava) a počítači využívané 2 (binární soustava), ukážu princip zapisování čísel, abych ho mohl následně zobecnit pro další, ne nutně racionální, báze.\\
+
+\begin{example} \label{ex:1}
+	\begin{align*}
+		156,25 & = 1 \times 10^2 + 5 \times 10^1 + 6 \times 10^0 + 2 \times 10^{-1} + 5 \times 10^{-2}                                                                       \\
+		       & = 1 \times 2^7 + 0 \times 2^6 + 0 \times 2^5 + 1 \times 2^4 + 1 \times 2^3 + 1 \times 2^2 + 0 \times 2^1 + 0 \times 2^0 + 0 \times 2^{-1} + 1 \times 2^{-2} \\
+		       & \quad \quad \implies (156)_2 = 10011100,01
+	\end{align*}
+
+	Vidíme, že reprezentaci čísla v jakékoliv soustavě ztotožníme se samotným číslem sečtením součinů cifer a jim příslušících mocnin báze.
+\end{example}
+
+\begin{definice}
+	Reprezentaci čísla $x$ v číselné soustavě $\beta$ budu nazývat jeho $\beta$-rozvoj a značit $(x)_\beta$.
+\end{definice}
+
+\begin{definice}[Hladový algoritmus] \label{Greedy}
+	Mějme bázi $\beta > 1$. Poté k nalezení $\beta$-rozvoje reálného čísla $x$ využijeme následující algoritmus. Najdeme celé $k$ takové, že $\beta^k \leq x < \beta^{k + 1}$. Začneme se zbytkem $r_k = x$ a pro klesající $i \leq k$ opakujeme $x_i \coloneq \lfloor \frac{r_i}{\beta^i} \rfloor$, $r_{i - 1} \coloneq r_i - x_i \beta^i$.
+
+	Proto platí
+	\begin{equation}
+		x = \sum_{i \leq k} x_i \beta^i
+	\end{equation}
+\end{definice}
+
+\begin{example}
+	Spočítejme pomocí hladového algoritmu $(217)_5$. Jelikož $5^3 \leq 217 < 5^4$ máme:
+	\begin{align*}
+		r_3    & = 217                    & x_3 & = \lfloor \frac{217}{125} \rfloor = 1 \\
+		r_2    & = 217 - 1 \cdot 125 = 92 & x_2 & = \lfloor \frac{92}{25} \rfloor = 3   \\
+		r_1    & = 92 - 3 \cdot 25 = 17   & x_1 & = \lfloor \frac{17}{5} \rfloor = 3    \\
+		r_0    & = 17 - 3 \cdot 5 = 2     & x_1 & = \lfloor \frac{2}{1} \rfloor = 2     \\
+		r_{-1} & = 2 - 2 \cdot 1 = 0
+	\end{align*}
+
+	Došli jsme ke zbytku 0, můžeme tedy skončit. Proto $(217)_5 = 1332$, což můžeme i pomocí příkladu \ref{ex:1} ověřit.
+\end{example}
+
+\begin{pozn}
+	$x_j$ je nutně celé číslo menší než $\beta$ (získáváme ho dělením největší možnou mocninou). V $\beta$-rozvoji se tedy mohou vyskytovat pouze cifry $\{k \in \mathbb{N}_0; k < \beta\}$ (později ukážeme i pomocí tvrzení \ref{Parry}).
+\end{pozn}
+
+\begin{example}
+	Tento algoritmus můžeme využít i pro neceločíselné báze. Uvažujme například zlatý řez $\tau = \frac{1 + \sqrt{5}}{2} \approx 1,618$ a $(2)_\tau$. Platí $\tau^1 \leq 2 < \tau^2$ (úpravy provádíme pomocí vztahu $\tau^2 = \tau + 1$):
+	\begin{align*}
+		r_1    & = 2                                & x_1    & = \lfloor \frac{2}{\tau} \rfloor = 1             \\
+		r_0    & = 2 - 1 \cdot \tau                 & x_0    & = \lfloor \frac{2 - \tau}{\tau^0} \rfloor = 0    \\
+		r_{-1} & = 2 - \tau                         & x_{-1} & = \lfloor \frac{2 - \tau}{\tau^{-1}} \rfloor = 0 \\
+		r_{-2} & = 2 - \tau                         & x_{-2} & = \lfloor \frac{2 - \tau}{\tau^{-2}} \rfloor = 1 \\
+		r_{-3} & = 2 - \tau - 1 \cdot \tau^{-2} = 0
+	\end{align*}
+
+	Docházíme ke zbytku 0 a platí tedy $(2)_\tau = 10,01$. Ověříme následovně:
+	\[
+		x = 1 \cdot \tau^1 + 1 \cdot \tau^{-2} = \tau + (\tau - 1)^2 = 2
+	\]
+\end{example}
+
+Pro určování periody pro nás bude užitečnější využívat jiný algoritmus, který lze aplikovat na $x \in [0, 1)$. Jakékoliv $x$ ale vždy můžeme dělit příslušnou dostatečně velikou mocninou báze, abychom $x$ do toho intervalu dostali, a v nalezeném rozvoji posunout desetinnou čárku o příslušný počet míst.
+
+\begin{definice}[Transformace $T$]
+	Mějme v bázi $\beta$ transformaci $T_\beta : [0, 1] \to [0, 1), T_\beta \coloneq \beta x - \lfloor \beta x \rfloor$. Dále mějme $\beta$-rozvoj $(x)_\beta = 0,x_1x_2x_3...$\footnote{Jiné indexování než v definici \ref{Greedy}}, poté $x_i = \lfloor \beta T_\beta^{i - 1}(x)\rfloor$, kde značení $T_\beta^n(x)$ je n-krát složená transformace (s $T_\beta^0(x) = x$).
+\end{definice}
+
+\begin{pozn}
+	Můžeme si tedy všimnout, že pro $n \in \mathbb{N}_0$
+	\[
+		T_\beta^n(x) = 0,x_{n + 1}x_{n + 2}x_{n + 3}... = (x - \sum_{k = 1}^nx_k\beta^{-k})\beta^n
+	\]
+	Přičemž se jedná o $\beta$-rozvoj.
+\end{pozn}
+
+\begin{example}
+	Spočítejme pomocí $T$ rozvoj $\frac{1}{3}$ v decimální soustavě:
+
+	\begin{align*}
+		x_1 & = \lfloor 10 \cdot T_{10}^0(\frac{1}{3}) \rfloor = 3 & T_{10}(\frac{1}{3}) & = 10 \frac{1}{3} - \lfloor 10 \frac{1}{3} \rfloor = \frac{1}{3} \\
+		x_2 & = \lfloor 10 \cdot T_{10}^1(\frac{1}{3}) \rfloor = 3
+	\end{align*}
+
+	Všimněme si, že každá další cifra závisí pouze na předchozí hodnotě $T$. A jelikož $T_{10}^0(x) = T_{10}^1(x)$, tak 10-rozvoj $\frac{1}{3}$ bude periodický s délkou periody 1.
+\end{example}
+
+\begin{example}
+	Mějme číslo $\gamma = 1 + \sqrt{2}$. Budeme hledat $\gamma$-rozvoj $\frac{1}{4}$:
+
+	\begin{align*}
+		x_1 & = \lfloor \gamma \cdot T_{\gamma}^0(\frac{1}{4}) \rfloor = 0 & T_\gamma(\frac{1}{4})                                     & = \gamma \frac{1}{4} - \lfloor \gamma \frac{1}{4} \rfloor = \gamma \frac{1}{4}                     \\
+		x_2 & = \lfloor \gamma \cdot T_{\gamma}^1(\frac{1}{4}) \rfloor = 1 & T_\gamma^2(\frac{1}{4}) = T_\gamma(\gamma\frac{1}{4})     & = \gamma^2 \frac{1}{4} - \lfloor \gamma^2 \frac{1}{4} \rfloor = \frac{2\gamma - 3}{4}              \\
+		x_3 & = \lfloor \gamma \cdot T_{\gamma}^2(\frac{1}{4}) \rfloor = 1 & T_\gamma^3(\frac{1}{4}) = T_\gamma(\frac{2\gamma - 3}{4}) & = \gamma\frac{2\gamma - 3}{4} - \lfloor \gamma\frac{2\gamma - 3}{4} \rfloor = \frac{\gamma - 2}{4} \\
+		x_4 & = \lfloor \gamma \cdot T_{\gamma}^3(\frac{1}{4}) \rfloor = 0 & T_\gamma^4(\frac{1}{4}) = T_\gamma(\frac{\gamma - 2}{4})  & = \gamma\frac{\gamma - 2}{4} - \lfloor \gamma\frac{\gamma - 2}{4} \rfloor = \frac{1}{4}            \\
+	\end{align*}
+
+	Dostáváme $T_\gamma^0(\frac{1}{4}) = T_\gamma^4(\frac{1}{4})$. Tedy $(\frac{1}{4})_\gamma = 0,(0110)^\omega$, kde $(...)^\omega$ značí periodu.
+\end{example}
+
+\begin{theorem}[Parry] \label{Parry}
+	$0,x_1x_2x_3...$ s $x_i \in \mathbb{N}_0$ může být $\beta$-rozvoj nějaké $x \in (0, 1)$ právě pokud pro každé $i \geq 1$ platí $x_ix_{i + 1}x_{i + 2}... \prec d^\ast_\beta(1)$, kde $\prec$ je lexikografické uspořádání a $d^\ast_\beta(1)$ je tzv. \textit{quasigreedy} rozvoj 1 definovaný následovně: $d^\ast_\beta(1) = t^\ast_1 t^\ast_2 t^\ast_3...$, přičemž $\lim_{x \to 1^-}(x)_\beta = 0,t^\ast_1 t^\ast_2 t^\ast_3...$.
+\end{theorem}
+
+\begin{pozn}
+	Důkaz v \cite{Parry}
+\end{pozn}
+
+\begin{corollary}
+	$d^\ast_{10}(1) = 9^\omega$. V decimální soustavě se proto mohou vyskytovat pouze cifry 0, 1, 2, ..., 9 a žádné číslo nesmí končit periodou $9^\omega$.
+\end{corollary}
+
+\subsection{Desetinné rozvoje}
+
+Mějme $a \in (0, 1)$ ve tvaru:
+
+\[
+	a = 0,b_1b_2b_3...b_{m-1}b_m(a_1a_2a_3...a_{n - 1}a_n)^\omega
+\]
+
+Poté nazýváme $a$ periodické, s periodou délky $n$ ve tvaru $a_1a_2a_3...a_{n - 1}a_n$ a m-tici $b_1b_2b_3...b_{m-1}b_m$ nazýváme předperiodou. Je-li délka předperiody 0, nazýváme číslo $a$ ryze periodické, jinak posléze periodické.
+
+\begin{theorem}[Midyho věta]
+	Nechť $p \in \mathbb{P}, p \geq 7$. Pokud periodu čísla $\frac{1}{p}$ lze rozdělit na dva bloky stejné délky, pak jejich součet je tvořen pouze číslicemi 9.
+\end{theorem}
+
+\begin{pozn}
+	Důkaz v \cite{RMF}
+\end{pozn}
+
+V \cite{Midy} bylo znění této věty pro obecnou soustavu $\beta > 1$ rozšířeno na:
+
+\begin{definice}[Midyho vlastnost]
+	Mějme $\beta > 1$. Poté říkáme, že $q \in \mathbb{N}$ má Midyho vlastnost v soustavě $\beta$, pokud existuje kladné celé číslo $p < q$ nesoudělné s $q$ takové, že
+	\begin{itemize}
+		\item $\beta$-rozvoj $\frac{p}{q}$ je ryze periodický ve tvaru $(\frac{p}{q})_\beta = 0,(c_1c_2...c_{2n})^\omega$, kde $2n$ je délka nejkratší periody, a
+		\item $x + y = \beta^n - 1$, kde $x$, $y$ mají $\beta$-rozvoje $(x)_\beta = c_1c_2...c_n$ a $(y)_\beta = c_{n + 1}c_{n + 2}...c_{2n}$.
+	\end{itemize}
+	Říkáme, že $p$ dosvědčuje Midyho vlastnost $q$ v bázi $\beta$.
+\end{definice}
+
+\section{Definice}
+\begin{definice}
+
+	Mějme $\beta$, které je kladným kořenem následující rovnice:
+
+	\begin{equation} \label{eq:1}
+		\beta^2 = m \beta + 1, \; \text{pro} \; m \in \mathbb{N}
+	\end{equation}
+
+	Platí tedy $\beta \in (m; m + 1)$ a také:
+	\[
+		\beta = \frac{m + \sqrt{m^2 + 4}}{2}
+	\]
+\end{definice}
+
+Dále vyšetříme využitím lexikografické podmínky (tvrzení \ref{Parry}) povolené rozvoje v soustavě $\beta$. Zajímá náš tedy $d^\ast_\beta(1)$:
+
+\[
+	\lim_{x \to 1^-} (x)_\beta = \lim_{\varepsilon \to 0^+} (1 - \varepsilon)_\beta
+\]
+
+Dále postupujeme využitím transformace $T$:
+\begin{align*}
+	x_1 & = \lfloor \beta (1 - \varepsilon) \rfloor = m                                                                                                                    & T^1_\beta(1 - \varepsilon) & = \beta(1 - \varepsilon) - m                           \\
+	x_2 & = \lfloor \beta (\beta - \varepsilon \beta - m) \rfloor = \lfloor \beta^2 - \varepsilon \beta^2 - m \beta \rfloor =  \lfloor 1 - \varepsilon \beta^2 \rfloor = 0 & T^2_\beta(1 - \varepsilon) & = 1 - \varepsilon \beta^2 = T^0_\beta(1 - \varepsilon)
+\end{align*}
+
+Platí tedy $\lim_{x \to 1^-} (x)_\beta = 0.(m0)^\omega$ a proto $d^*_\beta(1) = (m0)^\omega$. Podle lexikografické podmínky jsou platné cifry $\{0; 1; ...; m\}$, v desetinném rozvoji musí po $m$ následovat vždy $0$ a nesmí končit s $(0m)^\omega$.
+
+\begin{definice}
+	Mějme řadu $(S_n)_{n \in \mathbb{N}}$ definovanou:
+
+	\begin{equation} \label{eq:2}
+		S_0 = 0, S_1 = 1 \quad \text{a} \quad S_{n + 2} = m \cdot S_{n + 1} + S_n
+	\end{equation}
+\end{definice}
+
+\begin{veta}
+
+	\textit{Companion matrix} čísla $\beta$, definovaný:
+
+	\begin{equation*}
+		C =
+		\begin{pmatrix}
+			0 & 1 \\
+			1 & m
+		\end{pmatrix}
+	\end{equation*}
+
+	splňuje pro každé $N \in \mathbb{N}$:
+
+	\begin{equation} \label{eq:3}
+		C^N =
+		\begin{pmatrix}
+			S_{N - 1} & S_N       \\
+			S_N       & S_{N + 1}
+		\end{pmatrix}
+	\end{equation}
+\end{veta}
+
+\begin{proof}
+	Indukcí platí
+
+	\begin{align*}
+		C^1       & =
+		\begin{pmatrix}
+			0 & 1 \\
+			1 & m
+		\end{pmatrix}
+		\quad
+		C^2 =
+		\begin{pmatrix}
+			1 & m       \\
+			m & m^2 + 1
+		\end{pmatrix} \\
+		C^{N + 1} & = CC^N =
+		\begin{pmatrix}
+			0 & 1 \\
+			1 & m
+		\end{pmatrix}
+		\begin{pmatrix}
+			S_{N - 1} & S_N       \\
+			S_N       & S_{N + 1}
+		\end{pmatrix}
+		\\
+		          & =
+		\begin{pmatrix}
+			S_{N}     & S_{N + 1}               \\
+			S_{N + 1} & S_N + m \cdot S_{N + 1}
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			S_{N}     & S_{N + 1} \\
+			S_{N + 1} & S_{N + 2}
+		\end{pmatrix} \tag{Podle \eqref{eq:2}}
+	\end{align*}
+\end{proof}
+
+Dále pro $\beta$ platí některé vztahy, které platí i pro zlatý řez.\\
+
+\begin{veta}
+	\begin{equation} \label{eq:4}
+		\beta^k = (\beta + \tfrac{1}{\beta}) S_k + (\tfrac{-1}{\beta})^k,\ \text{pro}\ k \geq 0
+	\end{equation}
+\end{veta}
+
+\begin{proof}
+	Důkaz provedu opět indukcí:
+	\begin{align*}
+		\beta^0       & = (\beta + \tfrac{1}{\beta}) \cdot 0 + (\tfrac{-1}{\beta})^0 = 1                                                                                                           \\
+		\beta^1       & = (\beta + \tfrac{1}{\beta}) \cdot 1 + (\tfrac{-1}{\beta})^1 = \beta                                                                                                       \\
+		\beta^{k + 2} & = m \cdot \big( (\beta + \tfrac{1}{\beta}) S_{k + 1} + (\tfrac{-1}{\beta})^{k + 1} \big) + (\beta + \tfrac{1}{\beta}) S_k + (\tfrac{-1}{\beta})^k \tag{Podle \eqref{eq:1}} \\
+		              & = (\beta + \tfrac{1}{\beta}) (m \cdot S_{k + 1} + S_k) + (\beta^2 - m \cdot \beta) (\tfrac{-1}{\beta})^{k + 2}                                                             \\
+		              & = (\beta + \tfrac{1}{\beta})  S_{k + 2} + (\tfrac{-1}{\beta})^{k + 2} \tag{Podle \eqref{eq:2}}
+	\end{align*}
+\end{proof}
+
+
+\begin{veta}
+	\begin{equation} \label{eq:5}
+		\beta^k = S_k \beta + S_{k - 1},\ \text{pro}\ k \geq 0
+	\end{equation}
+\end{veta}
+
+\begin{proof}
+	Kdy definujeme $S_{-1} = 1$. Indukcí opět dostáváme:
+	\begin{align*}
+		\beta^0       & = 0 \cdot \beta + 1 = 1                                                            \\
+		\beta^1       & = 1 \cdot \beta + 0 = \beta                                                        \\
+		\beta^{k + 2} & = m \cdot (S_{k + 1} \beta + S_k) + S_k \beta + S_{k - 1} \tag{Podle \eqref{eq:1}} \\
+		              & = \beta \cdot (m \cdot S_{k + 1} + S_k) + m \cdot S_k + S_{k - 1}                  \\
+		              & = S_{k + 2} \beta + S_{k + 1}  \tag{Podle \eqref{eq:2}}                            \\
+	\end{align*}
+\end{proof}
+
+\section{Midy property}
+\subsection{Dostatečná podmínka}
+
+\begin{lemma}\label{Necessary}
+	Mějme $q \in \mathbb{N}, q > 2$ a $\beta > 1$. Poté $q$ dosvědčuje Midyho vlasnost pro $\beta$ právě pokud existuje $p \in \mathbb{N}, 0 < p < q$, $p$ nesoudělné s $q$ a $N \in \mathbb{N}$ takové, že:
+
+	\begin{equation*}
+		T^N(\tfrac{p}{q}) = \tfrac{q - p}{q} \quad \mathrm{a} \quad T^N(\tfrac{q - p}{q}) = \tfrac{q}{p}
+	\end{equation*}
+\end{lemma}
+
+\begin{pozn}
+	Důkaz v \cite{Midy}.
+\end{pozn}
+
+\begin{theorem}
+	Mějme $C$ \textit{companion matrix} čísla $\beta$ definovaného podle \eqref{eq:1}, nechť je $q \in \mathbb{N}, q > 2$. Pokud existuje $N \in \mathbb{N}, N > 1$ takové, že $C^N \equiv -I \mod q$, tak $q$ splňuje \textit{Midy property} v soustavě $\beta$. Každé $p \in \mathbb{N}, 0 < p < q$ \textit{svědčí} \textit{Midy property} $q$.
+\end{theorem}
+
+\begin{proof}
+	Prvně ukážeme, že každý zlomek $x \in \mathbb{Q} \cap (0,1)$ s čitatelem $q$ splňuje $T^N(x) = 1 - x$. Poté také platí $T^N(1 - x) = 1 - (1 - x) = x$, tedy $T^{2N}(x) = x$, což podle lemmatu \ref{Necessary} implikuje dané tvrzení.
+
+	Nechť jsou $c_1, c_2, ..., c_N$ cifry $\beta$-rozvoje $x = \frac{p}{q}$ obdrženého prvními $N$ iteracemi transformace $T$. Poté
+	\begin{equation} \label{eq:6}
+		(0, 1) \ni T^N(\tfrac{p}{q}) = \bigg(\frac{p}{q} - \frac{c_1}{\beta} - \frac{c_2}{\beta^2} - ... - \frac{c_N}{\beta^N}\bigg)\beta^N = \frac{1}{q}\bigg(p\beta^N - q\sum^{N - 1}_{k = 0}c_{N - k}\beta^k\bigg)
+	\end{equation}
+
+	Dosazením vztahu \eqref{eq:4} za mocniny $\beta$ dostáváme:
+
+	\begin{align*}
+		T^N(\tfrac{p}{q}) & = \frac{1}{q}\bigg(p\left((\beta + \tfrac{1}{\beta}) S_N + (\tfrac{-1}{\beta})^N\right) - q\sum^{N - 1}_{k = 0}\left(c_{N - k}\left((\beta + \tfrac{1}{\beta}) S_k + (\tfrac{-1}{\beta})^k\right)\right)\bigg)        \\
+		                  & = \frac{1}{q}\bigg( (\beta + \tfrac{1}{\beta})(\underbrace{pS_N - q\sum^{N - 1}_{k = 0}c_{N - k}S_k}_{=: A}) + p(\tfrac{-1}{\beta})^N - q\underbrace{\sum^{N - 1}_{k = 0}c_{N - k}(\tfrac{-1}{\beta})^k}_{=:B} \bigg)
+	\end{align*}
+
+	Předpoklad $C^N \equiv -I \mod q$ implikuje (podle \eqref{eq:3}) $S_N \equiv 0 \mod q$ a $S_{N - 1} \equiv -1 \mod q$. Proto $A \in \mathbb{Z}$ může být zapsáno ve tvaru
+	\begin{equation*}
+		A = pS_N - q\sum^{N - 1}_{k = 0}c_{N - k}S_k = \ell q \quad \textrm{pro nějaké}\ \ell \in \mathbb{Z}
+	\end{equation*}
+
+	Dostáváme následující odhad:
+	\begin{equation} \label{B estimate}
+		T^N(\tfrac{p}{q}) = |T^N(\tfrac{p}{q})| = |(\beta + \tfrac{1}{\beta})\ell + \tfrac{p}{q}(\tfrac{-1}{\beta})^N - B| > (\beta + \tfrac{1}{\beta})|\ell| - \tfrac{1}{\beta^N} - |B|
+	\end{equation}
+
+	V $\beta$-rozvoji se po cifře $m$ nachází vždy 0. Vytvoříme tedy odhad $B = \sum^{N - 1}_{k = 0}c_{N - k}(\tfrac{-1}{\beta})^k$. Budeme uvažovat pouze rozvoje $...m0m0m0$ a $...0m0m0(m - z), z \in \mathbb{Z}, 0 \leq z < m$, jelikož hledáme-li maximum $|B|$, tak uvažovat jiné cifry než tyto není třeba, jelikož se u cifer v celkové sumě střídá znaménko a právě všechny liché či právě všechny sudé cifry budou (chceme-li maximalizovat absolutní hodnotu) vždy 0.\footnote{V případě $c_N = m$ pro sudé $N$ lze vytvořit jemnější odhad $|B| \leq \sum^\infty_{k = 0}\tfrac{m}{\beta^{2k}} - \frac{1}{\beta^{N}}\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k}}$ a pro $c_N = 0$ a liché $N$ platí $|B| \leq \sum^\infty_{k = 0}\tfrac{m}{\beta^{2k + 1}} - \frac{1}{\beta^{N - 1}}\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k + 1}}$, ale pro potřeby tohoto důkazu to není nutné.}
+	%
+	% \sum^\infty_{k = 0}\tfrac{m}{\beta^{2k}} - \tfrac{1}{\beta^{N + 1}}\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k}} = \beta - \tfrac{1}{\beta^{N}} & \textrm{pokud}\ c_N = m\\
+	%
+	\begin{equation*}
+		|B| \leq
+		\begin{dcases}
+			\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k}} - \tfrac{1}{\beta^{N + 1}}\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k}} - m + (m - z)= \beta - \tfrac{1}{\beta^{N}} - z & \textrm{pokud}\ c_N = m - z \\
+			\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k + 1}} - \tfrac{1}{\beta^{N}}\sum^\infty_{k = 0}\tfrac{m}{\beta^{2k + 1}} = 1 - \tfrac{1}{\beta^{N}}                  & \textrm{pokud}\ c_N = 0
+		\end{dcases}
+	\end{equation*}
+
+	Nyní ukážeme, že $A = \ell q = 0$. Předpokládejme opak, tedy že $|\ell| \geq 1$.\\
+	Je-li $c_N = 0$, odhadem \eqref{B estimate} dostáváme $T^N(\frac{p}{q}) > (\beta + \tfrac{1}{\beta}) - \tfrac{1}{\beta^N} - (1 - \frac{1}{\beta^{N}}) = \beta - 1 + \tfrac{1}{\beta} > 1$, což je spor.\\
+	Pokud $c_N = m - z, z > 0$, dostáváme opět odhadem $T^N(\frac{p}{q}) > (\beta + \tfrac{1}{\beta}) - \tfrac{1}{\beta^N} - (\beta - \frac{1}{\beta^{N}} - z) = \tfrac{1}{\beta} + z > 1$, což je spor.\\
+	Pokud $z = 0$, tedy $c_N = m$, tak cifra $c_{N + 1} = 0$ a $T^{N + 1}(\frac{p}{q}) = \beta T^N(\frac{p}{q}) < 1$, tedy $T^N(\frac{p}{q}) < \frac{1}{\beta}$. Pokud $\ell \neq 0$ dostáváme $T^N(\frac{p}{q}) > (\beta + \tfrac{1}{\beta}) - \tfrac{1}{\beta^N} - (\beta - \frac{1}{\beta^{N}}) = \tfrac{1}{\beta}$, což je opět spor.\\
+	Dostáváme tedy, že $A = 0$.
+
+	Dosadíme pomocí vztahu \eqref{eq:5} za mocniny $\beta$ do rovnice \eqref{eq:6}:
+	\begin{align*}
+		T^N(\tfrac{p}{q}) & = \frac{1}{q}\bigg(p(S_N \beta + S_{N - 1}) - q\sum^{N - 1}_{k = 0}c_{N - k}(S_k \beta + S_{k - 1})\bigg)                                                                         \\
+		                  & = \frac{1}{q}\bigg(\beta (\underbrace{pS_N - q\sum^{N - 1}_{k = 0}c_{N - k}S_k}_{= A}) + pS_{N - 1} - q\underbrace{\sum^{N - 1}_{k = 0}c_{N - k}S_{k - 1}}_{\in \mathbb{Z}}\bigg)
+	\end{align*}
+
+	Jelikož $A = 0$ a $S_{N - 1} \equiv -1 \mod q$, existuje $n \in \mathbb{Z}$ takové, že:
+	$T^N(\tfrac{p}{q}) = \tfrac{1}{q}(-p + nq) = n - \tfrac{p}{q}$. Jelikož $T^N(\frac{p}{q}) \in (0, 1)$ a $\frac{p}{q} \in (0, 1)$, nutně musí být $n = 1$ a tedy $T^N(\frac{p}{q}) = \frac{q - p}{q}$, jak jsme chtěli ukázat.
+\end{proof}
+\newpage
+\end{document}
