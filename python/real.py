@@ -24,14 +24,14 @@ class real():
     def reduce(self):
         divider = gcd(self.c, self.k)
         if divider > 0:
-            self.c = int(self.c/divider)
-            self.k = int(self.k/divider)
-            self.a = int(self.a * divider)
+            self.c = self.c//divider
+            self.k = self.k//divider
+            self.a = self.a * divider
 
         divider = gcd(self.a, self.b)
         if divider > 0:
-            self.a = int(self.a/divider)
-            self.b = int(self.b/divider)
+            self.a = self.a//divider
+            self.b = self.b//divider
 
     def __str__(self):
         maxLen = max(len(str(self.a)), len(str(self.b)))

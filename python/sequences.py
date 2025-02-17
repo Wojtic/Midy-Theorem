@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from functools import lru_cache
 from math import gcd
+from utils import *
 
 # Naming convention:
 # n - n-th member of sequence
@@ -24,21 +25,6 @@ def mFibModQ(n, m, q):
     return (m * mFib(n - 1, m) + mFib(n - 2, m)) % q
 
 
-def coprime(a, b):
-    return not (gcd(a, b) > 1)
-
-
-def checkDivProperty(m, N=1000):
-    # Sm | Sr iff m | r
-    for i in range(1, N):
-        for j in range(i + 1, N):
-            if ((j % i == 0) and (mFib(j, m) % mFib(i, m) == 0)) or ((j % i != 0) and (mFib(j, m) % mFib(i, m) != 0)):
-                continue
-            print("Property doesn't hold for m = " + str(m) +
-                  ", i = " + str(i) + ", j = " + str(j))
-    # print("Property holds for m = " + str(m) + ", up to " + str(N))
-
-
 """
 m = 1
 sols = []
@@ -50,10 +36,8 @@ for q in range(3, 100):
 print(sols)
 """
 
-MAX_ITERATIONS = 1000000000
 
-
-def PisanoPeriod(m, q):
+def PisanoPeriod(m, q, MAX_ITERATIONS=1000000000):
     # Period of the sequence f_m mod q until it repeats
     if q <= 0:
         return 0
@@ -74,28 +58,13 @@ def pi(m, q):
     return len(PisanoPeriod(m, q))
 
 
-def isPrime(n):
-    if n < 2:
-        return False
-    if n == 2:
-        return True
-    if n % 2 == 0:
-        return False
-    d = 3
-    while d * d <= n:
-        if n % d == 0:
-            return (n == d)
-        d = d + 2
-    return True
-
-
 def plotPisanoPeriods():
     x = []
     periods1 = []
     periods2 = []
     periods3 = []
     periods4 = []
-    for j in range(1, 100):
+    for j in range(1, 2000):
         if not isPrime(j):
             continue
         print(j)
@@ -115,7 +84,7 @@ def plotPisanoPeriods():
     plt.show()
 
 
-plotPisanoPeriods()
+# plotPisanoPeriods()
 
 # for j in range(1, 10):
 #    print(seq(j, 2))
