@@ -76,7 +76,6 @@ class real():
                 return real(int(self.a*other.a), int(self.b*other.b), m, c, k)
             raise Exception(
                 "The two multiplied numbers have different nonzero irrational parts")
-            return
 
         if self.m == 0:
             return real(int(self.a*other.a), int(self.b*other.b))

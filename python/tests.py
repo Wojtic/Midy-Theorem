@@ -81,7 +81,7 @@ def checkMidyProperty(beta, n, maximum=0):
 
 def checkMidyPropertyMatrix(m, n):
     period = PisanoPeriod(m, n)
-    for i in range(3, len(period)):
+    for i in range(1, len(period)):
         if period[i] == 0 and period[i - 1] == n - 1:
             return True
     return False
