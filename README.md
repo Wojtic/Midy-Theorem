@@ -4,7 +4,7 @@ This is the Github repository for my Essay in the Czech Students' Professional A
 
 # Midyho věta v neceločíselných soustavách a vlastnosti k-Fibonacciho posloupností
 
-Toto je Github repositář pro moji práci v rámic Středoškolské Odborné Činnosti v roce 2024/25. Obsahuje všechen kód vytvořený během tvorby této práce.
+Toto je Github repozitář pro moji práci v rámci Středoškolské Odborné Činnosti v roce 2024/25. Obsahuje všechen kód vytvořený během tvorby této práce.
 
 ## Užití
 
@@ -58,7 +58,7 @@ Implementuje hladový algoritmus pro jakékoliv x.
 Zjistí desetinný rozvoj čísel v intervalu [0, 1) s využitím transformace T.
 
 **T(beta, n, x)**
-n-krát složená tranformace T. [0, 1] -> [0, 1)
+n-krát složená transformace T. [0, 1] -> [0, 1)
 
 #### plots
 
