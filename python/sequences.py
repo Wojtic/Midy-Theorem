@@ -25,18 +25,6 @@ def mFibModQ(n, m, q):
     return (m * mFib(n - 1, m) + mFib(n - 2, m)) % q
 
 
-"""
-m = 1
-sols = []
-for q in range(3, 100):
-    for i in range(1, q*q + q):
-        if (seqMod(i - 1, m, q) == seqMod(i + 1, m, q) == q - 1) and (seqMod(i, m, q) == 0):
-            sols.append((q, i))
-            break
-print(sols)
-"""
-
-
 def PisanoPeriod(m, q, MAX_ITERATIONS=1000000000):
     # Period of the sequence f_m mod q until it repeats
     if q <= 0:
@@ -82,10 +70,3 @@ def plotPisanoPeriods():
     plt.scatter(x, periods3, s=2, color="#00FF00")
     plt.scatter(x, periods4, s=2, color="#0000FF")
     plt.show()
-
-
-# plotPisanoPeriods()
-
-# for j in range(1, 10):
-#    print(seq(j, 2))
-# checkDivProperty(j)

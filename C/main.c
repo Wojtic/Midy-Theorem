@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Function to compute Fibonacci modulo q with multiplication factor m
 int mFibModQ(int n, int m, int q)
 {
     if (n <= 1)
@@ -18,7 +17,6 @@ int mFibModQ(int n, int m, int q)
     return b;
 }
 
-// Function to compute the Pisano period
 int *PisanoPeriod(int m, int q, int *length)
 {
     if (q <= 0)
@@ -49,7 +47,6 @@ int *PisanoPeriod(int m, int q, int *length)
     return sequence;
 }
 
-// Function to check if the Midy property holds
 int checkMidyPropertyMatrix(int m, int n)
 {
     int length;
@@ -70,10 +67,9 @@ int checkMidyPropertyMatrix(int m, int n)
     return 0;
 }
 
-// Function to find numbers satisfying the Midy property
 int *getMidyNumbersMatrix(int m, int N, int *count)
 {
-    int *numbers = malloc((N - 2) * sizeof(int)); // Allocate enough space
+    int *numbers = malloc((N - 2) * sizeof(int));
     *count = 0;
 
     for (int n = 3; n <= N; n++)
@@ -113,7 +109,6 @@ int main()
         end = clock();
         cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
-        // Append results to file
         fprintf(file, "Midy numbers for m = %d:\n", m);
         for (int i = 0; i < count; i++)
         {
